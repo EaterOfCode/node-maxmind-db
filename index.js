@@ -26,12 +26,12 @@ MaxmindDBReader.openSync = function(database){
     return mmdbreader;
 }
 
-MaxmindDBReader.prototype.getGeoData = function getGeoData(ipAddress,callback) {
-    this.reader.get(ipAddress,callback);
+MaxmindDBReader.prototype.getGeoData = function getGeoData(ipAddress, path, callback) {
+    this.reader.get(ipAddress, path, callback);
 };
 
-MaxmindDBReader.prototype.getGeoDataSync = function getGeoDataSync(ipAddress) {
-    return this.reader.getSync(ipAddress);
+MaxmindDBReader.prototype.getGeoDataSync = function getGeoDataSync(ipAddress, path) {
+    return this.reader.getSync(ipAddress, path);
 };
 
 MaxmindDBReader.prototype.getDatabaseMetadata = function getDatabaseMetadata() {

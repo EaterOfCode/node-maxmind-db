@@ -47,7 +47,47 @@ mmdbreader.open('./GeoLite2-City.mmdb',function(err,countries){
 						get();
 					}
 				});
+			} else {
+				doSpeedtest();
 			}
 		};
 	get();
 });
+
+function doSpeedtest() {
+	console.log("Cache speed test");
+	// open database
+
+	var randomIps = require('./mass.json');
+
+	console.time('Cached test w/ path');
+	var database = mmdbreader.openSync('./GeoLite2-City.mmdb');
+	for (var i = 0; i < randomIps.length; i++) {
+		database.getGeoDataSync(randomIps[i], ['country', 'names', 'en']);
+	}
+	console.timeEnd('Cached test w/ path');
+
+	console.time('Not cached test w/ path');
+	database = mmdbreader.openSync('./GeoLite2-City.mmdb');
+	for (var i = 0; i < randomIps.length; i++) {
+		database.getGeoDataSync(randomIps[i], ['country', 'names', 'en']);
+		database.reader._cachedIpv4StartNode = false;
+	}
+	console.timeEnd('Not cached test w/ path');
+
+	console.time('Cached test');
+	var database = mmdbreader.openSync('./GeoLite2-City.mmdb');
+	for (var i = 0; i < randomIps.length; i++) {
+		database.getGeoDataSync(randomIps[i]);
+	}
+	console.timeEnd('Cached test');
+
+	console.time('Not cached test');
+	database = mmdbreader.openSync('./GeoLite2-City.mmdb');
+	for (var i = 0; i < randomIps.length; i++) {
+		database.getGeoDataSync(randomIps[i]);
+		database.reader._cachedIpv4StartNode = false;
+	}
+	console.timeEnd('Not cached test');
+
+}
